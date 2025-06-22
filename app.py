@@ -120,6 +120,10 @@ def schankwagen_done(order_id):
 # App‑Start
 # ---------------------
 if __name__ == '__main__':
-    db.create_all()
-    seed_drinks()
+   # DB-Initialisierung im App-Kontext
+    with app.app_context():
+        db.create_all()
+        seed_drinks()
+
+    # Server starten
     app.run(host='0.0.0.0', port=5000, debug=True)
