@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Name Bedienung</label>
+    <input class="form-control" name="waiter_name" required>
+  </div>
+  <table class="table">
+    <thead><tr><th>Getränk</th><th>Größe (ml)</th><th>Preis €</th><th>Menge</th></tr></thead>
+    <tbody>
+      {% for d in drinks %}
+      <tr>
+        <td>{{d.name}}</td><td>{{d.size_ml}}</td><td>{{ "%.2f"|format(d.price) }}</td>
+        <td><input type="number" min="0" name="qty_{{d.id}}" class="form-control" style="width:80px"></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <button class="btn btn-primary">Bestätigen</button>
+</form>
+{% endblock %}

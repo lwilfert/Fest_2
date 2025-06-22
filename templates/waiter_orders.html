@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Offene Bestellungen – {{ waiter }}</h2>
+<table class="table table-sm">
+  <thead><tr><th>#</th><th>Details</th><th>Schank?</th><th>Aktion</th></tr></thead>
+  <tbody>
+    {% for o in orders if not o.bedienung_done %}
+      <tr>
+        <td>{{o.id}}</td>
+        <td>
+          {% for it in o.items %}
+            {{it.qty}}× {{it.drink.name}} {{it.drink.size_ml}}ml<br>
+          {% endfor %}
+          <strong>Summe:</strong>
+          {{ "%.2f"|format(sum(it.qty*float(it.drink.price) for it in o.items)) }} €
+        </td>
+        <td>{{ '✔️' if o.schankwagen_done else '⏳' }}</td>
+        <td>
+          {% if o.schankwagen_done %}
+            <form method="post" action="{{url_for('waiter_close', order_id=o.id)}}">
+              <button class="btn btn-success btn-sm">Abgerechnet</button>
+            </form>
+          {% else %}—
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-secondary" href="{{url_for('order')}}">Neue Bestellung</a>
+{% endblock %}
