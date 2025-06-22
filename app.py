@@ -44,28 +44,25 @@ class OrderItem(db.Model):
 # Hilfsfunktionen
 # ---------------------
 def seed_drinks():
+    # Pfad zur JSON
     cfg_path = os.path.join(os.path.dirname(__file__),
                             'config', 'drinks.json')
     with open(cfg_path, 'r', encoding='utf-8') as f:
         drinks = json.load(f)
 
+    # 1) Alle bisherigen Drinks löschen
+    Drink.query.delete()
+    db.session.commit()
+
+    # 2) Nur noch Drinks aus der JSON einfügen
     for d in drinks:
-        # existenz prüfen
-        exists = Drink.query.filter_by(
-            name=d['name'],
-            size_ml=d['size_ml']
-        ).first()
-        if not exists:
-            db.session.add(Drink(
-                name    = d['name'],
-                size_ml = d['size_ml'],
-                price   = d['price']
-            ))
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        
+        db.session.add(Drink(
+            name    = d['name'],
+            size_ml = d['size_ml'],
+            price   = d['price']
+        ))
+    db.session.commit()
+
 # ---------------------
 # Routen – Bedienung
 # ---------------------
