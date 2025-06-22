@@ -1,0 +1,6 @@
+[
+  { "name": "Bier",   "size_ml": 500, "price": 3.50 },
+  { "name": "Weizen", "size_ml": 500, "price": 3.50 },
+  { "name": "Cola",   "size_ml": 330, "price": 2.50 },
+  { "name": "Wasser", "size_ml": 500, "price": 2.00 }
+]

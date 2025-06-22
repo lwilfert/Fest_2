@@ -3,6 +3,9 @@ from flask import (
     Flask, render_template, request, redirect, url_for, flash
 )
 from flask_sqlalchemy import SQLAlchemy
+import json
+import os
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fest.db'
@@ -41,17 +44,28 @@ class OrderItem(db.Model):
 # Hilfsfunktionen
 # ---------------------
 def seed_drinks():
-    if Drink.query.count() == 0:
-        palette = [
-            ("Pils",   300, 2.80),
-            ("Pils",   500, 4.20),
-            ("Cola",   330, 2.50),
-            ("Wasser", 500, 2.00),
-        ]
-        for n, size, price in palette:
-            db.session.add(Drink(name=n, size_ml=size, price=price))
-        db.session.commit()
+    cfg_path = os.path.join(os.path.dirname(__file__),
+                            'config', 'drinks.json')
+    with open(cfg_path, 'r', encoding='utf-8') as f:
+        drinks = json.load(f)
 
+    for d in drinks:
+        # existenz prüfen
+        exists = Drink.query.filter_by(
+            name=d['name'],
+            size_ml=d['size_ml']
+        ).first()
+        if not exists:
+            db.session.add(Drink(
+                name    = d['name'],
+                size_ml = d['size_ml'],
+                price   = d['price']
+            ))
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        
 # ---------------------
 # Routen – Bedienung
 # ---------------------
