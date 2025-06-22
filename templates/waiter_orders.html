@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
+<head>
+  …
+  <!-- alle 10 Sekunden die Seite neu laden -->
+  <meta http-equiv="refresh" content="10">
+  …
+</head>
 <h2>Offene Bestellungen – {{ waiter }}</h2>
 <table class="table table-sm">
   <thead><tr><th>#</th><th>Details</th><th>Schank?</th><th>Aktion</th></tr></thead>
