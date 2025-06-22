@@ -21,6 +21,7 @@ class Drink(db.Model):
     name     = db.Column(db.String(40), nullable=False)
     size_ml  = db.Column(db.Integer, nullable=False)
     price    = db.Column(db.Numeric(5, 2), nullable=False)
+    active   = db.Column(db.Boolean, default=True, nullable=False)
 
 class Order(db.Model):
     id               = db.Column(db.Integer, primary_key=True)
@@ -44,22 +45,22 @@ class OrderItem(db.Model):
 # Hilfsfunktionen
 # ---------------------
 def seed_drinks():
-    # Pfad zur JSON
-    cfg_path = os.path.join(os.path.dirname(__file__),
-                            'config', 'drinks.json')
-    with open(cfg_path, 'r', encoding='utf-8') as f:
+    cfg = os.path.join(os.path.dirname(__file__),
+                       'config', 'drinks.json')
+    with open(cfg, 'r', encoding='utf-8') as f:
         drinks = json.load(f)
 
-    # 1) Alle bisherigen Drinks löschen
+    # Alle bisherigen Drinks entfernen
     Drink.query.delete()
     db.session.commit()
 
-    # 2) Nur noch Drinks aus der JSON einfügen
+    # Nur noch JSON-Einträge anlegen
     for d in drinks:
         db.session.add(Drink(
             name    = d['name'],
             size_ml = d['size_ml'],
-            price   = d['price']
+            price   = d['price'],
+            active  = d.get('active', True)
         ))
     db.session.commit()
 
@@ -68,7 +69,7 @@ def seed_drinks():
 # ---------------------
 @app.route('/', methods=['GET', 'POST'])
 def order():
-    drinks = Drink.query.all()
+    drinks = Drink.query.filter_by(active=True).all()    
     if request.method == 'POST':
         waiter = request.form['waiter_name'].strip()
         if not waiter:
