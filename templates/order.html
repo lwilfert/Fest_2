@@ -18,4 +18,19 @@
   </table>
   <button class="btn btn-primary">Bestätigen</button>
 </form>
+<script>
+// Referenz auf das Namens-Input
+const nameInput = document.querySelector('input[name="waiter_name"]');
+
+// Beim Laden: Wert aus localStorage übernehmen, falls vorhanden
+const savedName = localStorage.getItem('waiter_name');
+if (savedName) {
+  nameInput.value = savedName;
+}
+
+// Bei jeder Änderung: neuen Wert speichern
+nameInput.addEventListener('input', () => {
+  localStorage.setItem('waiter_name', nameInput.value);
+});
+</script>
 {% endblock %}
