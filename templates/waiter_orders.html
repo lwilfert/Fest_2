@@ -17,13 +17,7 @@
           {% for it in o.items %}
             {{it.qty}}× {{it.drink.name}} {{it.drink.size_ml}}ml<br>
           {% endfor %}
-         <strong>Summe:</strong>
-         {# Summenberechnung in zwei Schritten #}
-         {% set total = 0 %}
-         {% for it in o.items %}
-         {% set total = total + (it.qty * it.drink.price) %}
-         {% endfor %}
-         {{ '%.2f'|format(total) }} €
+         <strong>Summe:</strong> {{ '%.2f'|format(o.total) }} €
         </td>
         <td>{{ '✔️' if o.schankwagen_done else '⏳' }}</td>
         <td>

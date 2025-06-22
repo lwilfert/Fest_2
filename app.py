@@ -97,6 +97,9 @@ def waiter_orders(waiter_name):
               .filter_by(waiter_name=waiter_name)
               .order_by(Order.created_at.desc())
               .all())
+    # Berechne pro Bestellung die Summe:
+    for o in orders:
+        o.total = sum(item.qty * float(item.drink.price) for item in o.items)
     return render_template('waiter_orders.html',
                            orders=orders, waiter=waiter_name)
 
