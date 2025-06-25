@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<head>
+  <!-- Viewport for mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- alle 10 Sekunden die Seite neu laden -->
+  <meta http-equiv="refresh" content="10">
+  <style>
+    /* Angepasste Schrift für Mobilgeräte */
+    .fs-sm { font-size: 1rem; }
+    .btn-sm { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+  </style>
+</head>
+<div class="container-fluid">
+  <h2 class="fs-sm mb-2">Offene Bestellungen – {{ waiter }}</h2>
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead class="fs-sm"><tr><th>Details</th><th>Schank?</th></tr></thead>
+      <tbody class="fs-sm">
+        {% for o in orders if not o.bedienung_done %}
+          <tr>
+            <td>
+              {% for it in o.items %}
+                {{ it.qty }}× {{ it.drink.name }} {{ it.drink.size_ml }}ml&nbsp;({{ '%.2f'|format(it.drink.price) }} €)<br>
+              {% endfor %}
+              <div class="mt-1"><strong>Summe:</strong> {{ '%.2f'|format(o.total) }} €</div>
+              {% if o.schankwagen_done %}
+                <form method="post" action="{{ url_for('waiter_close', order_id=o.id) }}" class="mt-2">
+                  <button class="btn btn-success btn-sm d-block w-100">Abgerechnet</button>
+                </form>
+              {% endif %}
+            </td>
+            <td class="align-middle text-center">{{ '✔️' if o.schankwagen_done else '⏳' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <a class="btn btn-secondary btn-sm mt-3 d-block w-100" href="{{ url_for('order') }}">Neue Bestellung</a>
+</div>
+{% endblock %}

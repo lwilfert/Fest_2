@@ -1,0 +1,16 @@
+[
+  { "name": "Bier",                 "size_ml": 500, "price": 3.50, "active": true },
+  { "name": "Weizen",               "size_ml": 500, "price": 3.50, "active": true },
+  { "name": "Radler",               "size_ml": 500, "price": 3.50, "active": true },
+  { "name": "Alkoholfreies Bier",   "size_ml": 500, "price": 3.00, "active": true },
+  { "name": "Alkoholfreies Weizen", "size_ml": 500, "price": 3.00, "active": true },
+  { "name": "Weinschorle süß",      "size_ml": 200, "price": 3.00, "active": true },
+  { "name": "Weinschorle sauer",    "size_ml": 200, "price": 3.00, "active": true },
+  { "name": "Apfelschorle",         "size_ml": 500, "price": 2.50, "active": true },
+  { "name": "Zitronenlimo",         "size_ml": 500, "price": 2.50, "active": true },
+  { "name": "Orangenlimo",          "size_ml": 500, "price": 2.50, "active": true },
+  { "name": "Cola",                 "size_ml": 500, "price": 2.50, "active": true },
+  { "name": "Wasser",               "size_ml": 500, "price": 2.00, "active": true },
+  { "name": "test",                 "size_ml": 500, "price": 2.50, "active": false },
+  { "name": "test2",                "size_ml": 500, "price": 2.00, "active": false }
+]
