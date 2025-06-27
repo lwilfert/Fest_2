@@ -24,7 +24,7 @@
                 {{ it.qty }}× {{ it.drink.name }} {{ it.drink.size_ml }}ml&nbsp;({{ '%.2f'|format(it.drink.price) }} €)<br>
               {% endfor %}
               <div class="mt-1"><strong>Summe:</strong> {{ '%.2f'|format(o.total) }} €</div>
-              {% if o.schankwagen_done %}
+              {% if o.schankwagen_done and o.suesskram_done %}
                 <form method="post" action="{{ url_for('waiter_close', order_id=o.id) }}" class="mt-2">
                   <button class="btn btn-success btn-sm d-block w-100">Abgerechnet</button>
                 </form>

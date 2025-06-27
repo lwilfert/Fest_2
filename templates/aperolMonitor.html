@@ -8,9 +8,11 @@
       <tr>
         <td>{{o.id}}</td>
         <td>{{o.waiter_name}}</td>
-        <td>
+         <td>
           {% for it in o.items %}
-              {{it.qty}}× {{it.drink.name}} {{it.drink.size_ml}}ml<br>
+            {% if it.drink.suesskram %}
+              {{ it.qty }}× {{ it.drink.name }} {{ it.drink.size_ml }}ml<br>
+            {% endif %}
           {% endfor %}
         </td>
         <td>
