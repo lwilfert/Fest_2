@@ -29,6 +29,7 @@ class Order(db.Model):
     waiter_name      = db.Column(db.String(30), nullable=False)
     created_at       = db.Column(db.DateTime, default=datetime.utcnow)
     schankwagen_done = db.Column(db.Boolean, default=False)
+    suesskram_done = db.Column(db.Boolean, default=False)
     bedienung_done   = db.Column(db.Boolean, default=False)
     items            = db.relationship('OrderItem', backref='order',
                                         cascade='all, delete-orphan')
@@ -120,14 +121,14 @@ def waiter_close(order_id):
 @app.route('/aperolMonitor')
 def aperolMonitor():
     open_orders = (Order.query
-                   .filter_by(schankwagen_done=False)
+                   .filter_by(suesskram_done=False)
                    .order_by(Order.created_at.asc())
                    .all())
     filtered_orders = [
         o for o in open_orders 
         if any(it.drink.suesskram for it in o.items)
     ]
-    return render_template('monitor.html', orders=filtered_orders)
+    return render_template('aperolMonitor.html', orders=filtered_orders)
 
 @app.route('/monitor')
 def monitor():
@@ -150,6 +151,14 @@ def schankwagen_done(order_id):
     db.session.commit()
     flash(f"Bestellung #{order.id} fertig!", "success")
     return redirect(url_for('monitor'))
+
+@app.post('/aperolMonitor/<int:order_id>/done')
+def suesskram_done(order_id):
+    order = Order.query.get_or_404(order_id)
+    order.suesskram_done = True
+    db.session.commit()
+    flash(f"Bestellung #{order.id} fertig!", "success")
+    return redirect(url_for('aperolMonitor'))
 
 # ---------------------
 # App‑Start
