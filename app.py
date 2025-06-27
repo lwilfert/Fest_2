@@ -22,6 +22,7 @@ class Drink(db.Model):
     size_ml  = db.Column(db.Integer, nullable=False)
     price    = db.Column(db.Numeric(5, 2), nullable=False)
     active   = db.Column(db.Boolean, default=True, nullable=False)
+    suesskram= db.Column(db.Boolean, default=True, nullable=False)
 
 class Order(db.Model):
     id               = db.Column(db.Integer, primary_key=True)
@@ -60,7 +61,8 @@ def seed_drinks():
             name    = d['name'],
             size_ml = d['size_ml'],
             price   = d['price'],
-            active  = d.get('active', True)
+            active  = d.get('active', True),
+            suesskram  = d.get('suesskram', True)
         ))
     db.session.commit()
 
@@ -115,13 +117,31 @@ def waiter_close(order_id):
 # ---------------------
 # Routen – Schankwagen
 # ---------------------
+@app.route('/aperolMonitor')
+def aperolMonitor():
+    open_orders = (Order.query
+                   .filter_by(schankwagen_done=False)
+                   .order_by(Order.created_at.asc())
+                   .all())
+    filtered_orders = [
+        o for o in open_orders 
+        if any(it.drink.suesskram for it in o.items)
+    ]
+    return render_template('monitor.html', orders=filtered_orders)
+
 @app.route('/monitor')
 def monitor():
     open_orders = (Order.query
                    .filter_by(schankwagen_done=False)
                    .order_by(Order.created_at.asc())
                    .all())
-    return render_template('monitor.html', orders=open_orders)
+    filtered_orders = [
+        o for o in open_orders 
+        if any(not it.drink.suesskram for it in o.items)
+    ]
+    return render_template('monitor.html', orders=filtered_orders)
+
+
 
 @app.post('/monitor/<int:order_id>/done')
 def schankwagen_done(order_id):
