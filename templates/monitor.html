@@ -7,6 +7,7 @@
     {% for o in orders %}
       <tr>
         <td>{{o.id}}</td>
+        <td>{{o.waiter_name}}</td>
         <td>
           {% for it in o.items %}
             {% if not it.drink.suesskram %}
